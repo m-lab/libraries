@@ -1,0 +1,25 @@
+%module mlabpy
+%include "std_string.i"
+%{
+#include "../include/mlab/host.h"
+#include "../include/mlab/packet.h"
+#include "../include/mlab/socket_family.h"
+#include "../include/mlab/socket_type.h"
+#include "../include/mlab/socket.h"
+#include "../include/mlab/accepted_socket.h"
+#include "../include/mlab/client_socket.h"
+#include "../include/mlab/listen_socket.h"
+#include "../include/mlab/ns.h"
+#include "../include/mlab/http.h"
+%}
+
+%include "../include/mlab/host.h"
+%include "../include/mlab/packet.h"
+%include "../include/mlab/socket_family.h"
+%include "../include/mlab/socket_type.h"
+%include "../include/mlab/socket.h"
+#include "../include/mlab/accepted_socket.h"
+#include "../include/mlab/client_socket.h"
+#include "../include/mlab/listen_socket.h"
+%include "../include/mlab/ns.h"
+%include "../include/mlab/http.h"

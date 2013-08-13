@@ -1,13 +1,25 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-
-# Compiled Dynamic libraries
+# common
+bin/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+lib/
+tags
+*.pyc
 *.so
-*.dylib
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+# linux/Make
+Makefile
+
+# osx/xcode
+build/
+CMakeScripts/
+mlab.build/
+mlab.xcodeproj/
+test/CMakeScripts/
+test/mlab.build/
+third_party/gtest-1.6.0/CMakeScripts/
+third_party/gtest-1.6.0/gtest.xcodeproj/
+third_party/gtest-1.6.0/mlab.build/
+
+swig/*_wrap.cxx
