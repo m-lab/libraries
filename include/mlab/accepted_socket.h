@@ -15,7 +15,7 @@
 #ifndef _MLAB_ACCEPTED_SOCKET_H_
 #define _MLAB_ACCEPTED_SOCKET_H_
 
-#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID)
+#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID) || defined(OS_FREEBSD)
 #include <arpa/inet.h>
 #elif defined(OS_WINDOWS)
 #include <WinSock2.h>

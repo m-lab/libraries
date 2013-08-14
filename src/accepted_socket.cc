@@ -14,7 +14,7 @@
 
 #include "mlab/accepted_socket.h"
 
-#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID)
+#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID) || defined (OS_FREEBSD)
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #elif defined(OS_WINDOWS)

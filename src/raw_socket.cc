@@ -14,7 +14,11 @@
 
 #include "mlab/raw_socket.h"
 
-#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID)
+#if defined(OS_FREEBSD)
+#include <netinet/in.h>
+#endif
+
+#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID) || defined(OS_FREEBSD)
 #include <arpa/inet.h>
 #include <net/if.h>
 #include <netinet/icmp6.h>

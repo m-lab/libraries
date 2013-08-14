@@ -14,7 +14,7 @@
 
 #include "mlab/mlab.h"
 
-#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID)
+#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID) || defined(OS_FREEBSD)
 #include <errno.h>
 #include <sys/utsname.h>
 #endif
@@ -78,7 +78,7 @@ int AcceptAndStore(ListenSocket* socket) {
 
 std::string Platform() {
   std::string platform_str;
-#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID)
+#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID) || defined(OS_FREEBSD)
   utsname uts;
   if (uname(&uts) == 0) {
     LOG(mlab::VERBOSE, "Sysname:  %s", uts.sysname);

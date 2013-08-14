@@ -15,7 +15,11 @@
 #ifndef _MLAB_PROTOCOL_HEADER_H_
 #define _MLAB_PROTOCOL_HEADER_H_
 
-#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID)
+#if defined(OS_FREEBSD)
+#include <netinet/in.h>
+#endif
+
+#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID) || defined(OS_FREEBSD)
 #include <arpa/inet.h>
 #include <net/if.h>
 #elif defined(OS_WINDOWS)

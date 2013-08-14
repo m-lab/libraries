@@ -15,7 +15,7 @@
 #ifndef _MLAB_HOST_H_
 #define _MLAB_HOST_H_
 
-#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID)
+#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_ANDROID) || defined(OS_FREEBSD)
 #include <netdb.h>
 #elif defined(OS_WINDOWS)
 #include <WinSock2.h>

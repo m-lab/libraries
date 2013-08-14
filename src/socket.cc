@@ -14,7 +14,11 @@
 
 #include "mlab/socket.h"
 
-#if defined(OS_LINUX) || defined(OS_MACOSX)
+#if defined(OS_FREEBSD)
+#include <netinet/in.h>
+#endif
+
+#if defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_FREEBSD)
 #include <arpa/inet.h>
 #elif defined(OS_WINDOWS)
 #include <winsock2.h>
