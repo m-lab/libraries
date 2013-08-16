@@ -47,10 +47,12 @@ AcceptedSocket::AcceptedSocket(int fd,
 }
 
 AcceptedSocket::~AcceptedSocket() {
-#if defined(OS_LINUX) || defined(OS_MACOSX)
+#if defined(OS_ANDROID) || defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_FREEBSD)
   close(client_fd_);
 #elif defined(OS_WINDOWS)
   closesocket(client_fd_);
+#else
+#error Undefined platform
 #endif
   // Allow the listening socket that spawned this socket to close the file
   // descriptor.

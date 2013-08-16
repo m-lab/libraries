@@ -128,10 +128,12 @@ void Socket::CreateSocket() {
 
 void Socket::DestroySocket() {
   if (fd_ != -1) {
-#if defined(OS_LINUX) || defined(OS_MACOSX)
+#if defined(OS_ANDROID) || defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_FREEBSD)
     close(fd_);
 #elif defined(OS_WINDOWS)
     closesocket(fd_);
+#else
+#error Undefined platform
 #endif
   }
   fd_ = -1;
