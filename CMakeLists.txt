@@ -35,7 +35,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
-	set(CMAKE_CXX_FLAGS "-Wall -Werror -fPIC -fno-exceptions -fno-rtti")
+	set(CMAKE_CXX_FLAGS "-Wall -Werror -fPIC -fno-exceptions")
 	set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DDEBUG")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -fno-strict-aliasing")
 

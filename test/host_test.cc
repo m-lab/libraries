@@ -88,8 +88,10 @@ TEST(HostTest, ResolveHostname) {
 }
 
 TEST(HostDeathTest, FailureToResolve) {
+#if !defined(OS_FREEBSD)
   const char host_addr[] = "hiybbprqag";
   EXPECT_DEATH(mlab::Host host(host_addr), "Failed to resolve");
+#endif
 }
 
 }  // namespace mlab

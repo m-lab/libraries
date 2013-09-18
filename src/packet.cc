@@ -22,12 +22,12 @@ Packet::Packet(const std::vector<uint8_t>& data)
 
 Packet::Packet(const std::string& data)
     : data_(data.begin(), data.end()) {
-  data_.push_back(0);
+  //  data_.push_back(0);
 }
 
 Packet::Packet(const char* buffer, size_t length)
     : data_(buffer, buffer + length) {
-  data_.push_back(0);
+  //  data_.push_back(0);
 }
 
 }  // namespace mlab

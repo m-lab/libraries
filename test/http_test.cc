@@ -23,7 +23,7 @@ const char kStatusOK[] = "HTTP/1.1 200 OK";
 }  // namespace
 
 TEST(HTTPTest, SimpleGET) {
-  std::string response = mlab::http::Get("measurementlab.net", "", 2048U);
+  std::string response = mlab::http::Get("www.measurementlab.net", "", 2048U);
   // Check the status.
   std::string status = response.substr(0, response.find_first_of("\r\n"));
   EXPECT_EQ(kStatusOK, status);

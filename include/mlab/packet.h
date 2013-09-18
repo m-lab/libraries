@@ -28,7 +28,7 @@ class Packet {
   explicit Packet(const std::string& data);
   Packet(const char* buffer, size_t length);
 
-  std::string str() const { return std::string(buffer()); }
+  std::string str() const { return std::string(buffer(), 0, length()); }
 
   const char* buffer() const {
     return reinterpret_cast<const char*>(&data_[0]);

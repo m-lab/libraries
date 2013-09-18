@@ -35,7 +35,8 @@ TEST(PacketTest, FromCharArray) {
   std::vector<uint8_t> expected_p(strlen(buffer));
   for (size_t i = 0; i < expected_p.size(); ++i)
     expected_p[i] = buffer[i];
-  expected_p.push_back(0);
+  // Packet no longer contains trailing NUL
+  // expected_p.push_back(0);
 
   ExpectVectorEqual(expected_p, p.data());
 }
@@ -52,7 +53,8 @@ TEST(PacketTest, FromString) {
   std::vector<uint8_t> expected_p(strlen(buffer));
   for (size_t i = 0; i < expected_p.size(); ++i)
     expected_p[i] = buffer[i];
-  expected_p.push_back(0);
+  // Packet no longer contains trailing NUL
+  // expected_p.push_back(0);
 
   ExpectVectorEqual(expected_p, p.data());
 }
@@ -66,7 +68,7 @@ TEST(PacketTest, FromStringOfNulls) {
   std::string message(128, '0');
   Packet p(message);
   EXPECT_GT(p.length(), 0U);
-  EXPECT_EQ(message.size() + 1, p.length());
+  EXPECT_EQ(message.size(), p.length());
 }
 
 }  // namespace mlab
