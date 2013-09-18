@@ -35,28 +35,26 @@ typedef SSIZE_T ssize_t;
 
 namespace mlab {
 
-AcceptedSocket::AcceptedSocket(int fd,
-                               int client_fd,
+AcceptedSocket::AcceptedSocket(int listen_fd,
+                               int accepted_fd,
                                SocketType type,
                                SocketFamily family)
     : Socket(type, family),
-      client_fd_(client_fd),
+      listen_fd_(listen_fd),
       client_addr_len_(0) {
-  fd_ = fd;
-  ASSERT(type != SOCKETTYPE_TCP || client_fd != -1);
+  fd_ = accepted_fd;
+  ASSERT(type != SOCKETTYPE_TCP || listen_fd_ != -1);
 }
 
 AcceptedSocket::~AcceptedSocket() {
 #if defined(OS_ANDROID) || defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_FREEBSD)
-  close(client_fd_);
+  close(listen_fd_);
 #elif defined(OS_WINDOWS)
-  closesocket(client_fd_);
+  closesocket(listen_fd_);
 #else
 #error Undefined platform
 #endif
-  // Allow the listening socket that spawned this socket to close the file
-  // descriptor.
-  fd_ = -1;
+  listen_fd_ = -1;
 }
 
 bool AcceptedSocket::Send(const Packet& bytes, ssize_t *num_bytes) const {
@@ -65,13 +63,11 @@ bool AcceptedSocket::Send(const Packet& bytes, ssize_t *num_bytes) const {
   ssize_t num = -1;
   switch (type()) {
     case SOCK_STREAM:
-      ASSERT(client_fd_ != -1);
       ASSERT(client_addr_len_ == 0);
-      num = send(client_fd_, bytes.buffer(), bytes.length(), 0);
+      num = send(fd_, bytes.buffer(), bytes.length(), 0);
       break;
 
     case SOCK_DGRAM:
-      ASSERT(client_fd_ == -1);
       ASSERT(client_addr_len_ != 0);
       num = sendto(fd_, bytes.buffer(), bytes.length(), 0,
                    reinterpret_cast<const sockaddr*>(&client_addr_),
@@ -108,12 +104,10 @@ Packet AcceptedSocket::Receive(size_t count, ssize_t *num_bytes) {
   ssize_t num = -1;
   switch (type()) {
     case SOCK_STREAM:
-      ASSERT(client_fd_ != -1);
-      num = recv(client_fd_, &buffer[0], count, 0);
+      num = recv(fd_, &buffer[0], count, 0);
       break;
 
     case SOCK_DGRAM:
-      ASSERT(client_fd_ == -1);
       client_addr_len_ = sizeof(sockaddr_storage);
       num = recvfrom(fd_, &buffer[0], count, 0,
                      reinterpret_cast<sockaddr*>(&client_addr_),

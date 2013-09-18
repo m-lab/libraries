@@ -42,15 +42,13 @@ class AcceptedSocket : public Socket {
   // received packet and sets |num_bytes| to the actual bytes received.
   virtual Packet Receive(size_t count, ssize_t *num_bytes);
 
-  int client_raw() const { return client_fd_; }
-
  private:
   friend class ListenSocket;
 
-  AcceptedSocket(int fd, int client_fd, SocketType type, SocketFamily family);
+  AcceptedSocket(int listen_fd, int accepted_fd, SocketType type,
+                 SocketFamily family);
 
-  // Valid for TCP sockets.
-  int client_fd_;
+  int listen_fd_;
 
   // Valid for UDP sockets after first received packet.
   sockaddr_storage client_addr_;

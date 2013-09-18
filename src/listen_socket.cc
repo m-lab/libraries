@@ -129,7 +129,7 @@ AcceptedSocket* ListenSocket::Accept() const {
   ASSERT(fd_ != -1);
 
   if (type() != SOCKETTYPE_TCP) {
-    return new AcceptedSocket(fd_, -1, type(), family_);
+    return new AcceptedSocket(-1, fd_, type(), family_);
   }
 
   sockaddr_storage sock_storage;
