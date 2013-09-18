@@ -60,6 +60,10 @@ class ClientSocket : public Socket {
   // received packet. |num_bytes| is the number of bytes actually received.
   virtual Packet Receive(size_t count, ssize_t *num_bytes);
 
+  // Attempts to accumulate |count| bytes from connected clients. Returns the
+  // received packet. |num_bytes| is the number of bytes actually received.
+  virtual Packet ReceiveX(size_t count, ssize_t *num_bytes);
+
  private:
   ClientSocket(SocketType type, SocketFamily family);
 

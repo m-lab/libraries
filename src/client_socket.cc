@@ -317,6 +317,42 @@ Packet ClientSocket::Receive(size_t count, ssize_t *num_bytes) {
   return Packet(buffer, num);
 }
 
+Packet ClientSocket::ReceiveX(size_t count, ssize_t *num_bytes) {
+  ASSERT(fd_ != -1);
+  ASSERT(count > 0);
+
+  LOG(VERBOSE, "Receiving %zu bytes.", count);
+
+  char buffer[count];
+  size_t offset = 0;
+  size_t recv_count = 0;
+  
+  while (offset < count) {
+    ssize_t num = recv(fd_, &buffer[offset], count - offset, 0);
+
+    if (num < 0) {
+      if (num_bytes != NULL)
+	*num_bytes = offset;
+      LOG(VERBOSE, "Failed to recv: %s [%d]", strerror(errno), errno);
+      return Packet(buffer, recv_count);
+    }
+
+    if (num == 0)
+      break;
+
+    offset += num;
+  }
+
+  if (offset == 0) {
+    LOG(WARNING, "Failed to recv: No bytes available.");
+  } else if (static_cast<size_t>(offset) != count) {
+    LOG(VERBOSE, "Tried to recv %zu bytes; recv %zd bytes instead.", count,
+        offset);
+  }
+
+  return Packet(buffer, offset);
+}
+
 ClientSocket::ClientSocket(SocketType type, SocketFamily family)
     : Socket(type, family) {
   CreateSocket();
