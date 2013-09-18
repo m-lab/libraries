@@ -16,6 +16,7 @@
 #define _MLAB_PROTOCOL_HEADER_H_
 
 #if defined(OS_FREEBSD)
+#include <sys/socket.h>
 #include <netinet/in.h>
 #endif
 
