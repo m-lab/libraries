@@ -33,10 +33,9 @@ class Packet {
   const char* buffer() const {
     return reinterpret_cast<const char*>(&data_[0]);
   }
+  const size_t length() const { return data_.size(); }
 
   const std::vector<uint8_t>& data() const { return data_; }
-
-  const size_t length() const { return data_.size(); }
 
  private:
   std::vector<uint8_t> data_;

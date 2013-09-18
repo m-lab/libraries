@@ -65,7 +65,7 @@ TEST(PacketTest, FromStringOfNulls) {
   Packet p(message);
   EXPECT_GT(p.length(), 0U);
   EXPECT_EQ(message.size(), p.length());
-  EXPECT_STREQ(message.c_str(), p.buffer());
+  EXPECT_STREQ(message.c_str(), p.str().c_str());
 }
 
 }  // namespace mlab
