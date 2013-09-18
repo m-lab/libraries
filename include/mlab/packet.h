@@ -22,11 +22,18 @@
 
 namespace mlab {
 
+// TODO(dominich): Should this take care of htonl/ntohl calls?
 class Packet {
  public:
   explicit Packet(const std::vector<uint8_t>& data);
   explicit Packet(const std::string& data);
   Packet(const char* buffer, size_t length);
+
+  template<typename T> Packet(const T& data) {
+    const uint8_t* buffer = reinterpret_cast<const uint8_t*>(&data);
+    size_t length = sizeof(T) / sizeof(uint8_t);
+    data_.assign(buffer, buffer + length);
+  }
 
   std::string str() const { return std::string(buffer(), 0, length()); }
 
@@ -37,6 +44,9 @@ class Packet {
 
   const std::vector<uint8_t>& data() const { return data_; }
 
+  template<typename T> T as() const {
+    return *(reinterpret_cast<const T*>(&data_[0]));
+  }
  private:
   std::vector<uint8_t> data_;
 };

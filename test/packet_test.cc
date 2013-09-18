@@ -68,4 +68,17 @@ TEST(PacketTest, FromStringOfNulls) {
   EXPECT_STREQ(message.c_str(), p.str().c_str());
 }
 
+TEST(PacketTest, FromPOD) {
+  uint32_t message = 4242;
+  Packet p(message);
+  EXPECT_EQ(0x92, p.data()[0]);
+  EXPECT_EQ(0x10, p.data()[1]);
+}
+
+TEST(PacketTest, ToPOD) {
+  uint32_t message = 1234;
+  Packet p(message);
+  EXPECT_EQ(message, p.as<uint32_t>());
+}
+
 }  // namespace mlab
