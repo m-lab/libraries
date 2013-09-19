@@ -17,16 +17,10 @@
 
 #include <sys/socket.h>
 
-#include <string>
-
 enum SocketFamily {
   SOCKETFAMILY_UNSPEC = AF_UNSPEC,
   SOCKETFAMILY_IPV4 = AF_INET,
   SOCKETFAMILY_IPV6 = AF_INET6
 };
-
-namespace mlab {
-SocketFamily GetSocketFamilyForAddress(const std::string& addr);
-}  // namespace mlab
 
 #endif  //  _MLAB_SOCKET_FAMILY_H_

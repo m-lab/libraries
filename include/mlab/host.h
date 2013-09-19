@@ -69,6 +69,8 @@ class Host {
   SocketAddressList sockaddr_;
 };
 
+// TODO(dominich): Move this to a better header.
+SocketFamily GetSocketFamilyForAddress(const std::string& addr);
 }  // namespace mlab
 
 #endif  // _MLAB_HOST_H_
