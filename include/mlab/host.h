@@ -69,9 +69,6 @@ class Host {
   SocketAddressList sockaddr_;
 };
 
-// TODO(xunfan): move this function to socket_family.h
-SocketFamily GetSocketFamilyForAddress(const std::string& addr);
-
 }  // namespace mlab
 
 #endif  // _MLAB_HOST_H_

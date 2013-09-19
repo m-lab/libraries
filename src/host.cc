@@ -32,7 +32,6 @@
 #error Undefined platform
 #endif
 
-#include "errno.h"
 #include "log.h"
 
 namespace mlab {
@@ -84,25 +83,6 @@ Host::Host(const std::string& hostname) : original_hostname(hostname) {
       LOG(VERBOSE, "Resolved: %s", address.c_str());
   }
   freeaddrinfo(servinfo);
-}
-
-SocketFamily GetSocketFamilyForAddress(const std::string& addr) {
-  struct addrinfo hint;
-  struct addrinfo *info;
-  memset(&hint, 0, sizeof(hint));
-  hint.ai_family = AF_UNSPEC;
-  hint.ai_flags = AI_NUMERICHOST;  // addr is a numerical network address
-
-  if (getaddrinfo(addr.c_str(), 0, &hint, &info) == 0) {
-    switch (info->ai_family) {
-      case AF_INET: return SOCKETFAMILY_IPV4;
-      case AF_INET6: return SOCKETFAMILY_IPV6;
-      default: return SOCKETFAMILY_UNSPEC;
-    }
-  } else {
-    LOG(ERROR, "getaddrinfo fails. %s [%d]", strerror(errno), errno);
-    return SOCKETFAMILY_UNSPEC;
-  }
 }
 
 }  // namespace mlab
