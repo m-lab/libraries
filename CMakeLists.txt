@@ -14,7 +14,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 # Set up directories
 set(JSONCPP_ROOT ${PROJECT_SOURCE_DIR}/third_party/json-cpp)
-set(GTEST_ROOT ${PROJECT_SOURCE_DIR}/third_party/gtest-1.6.0)
+set(GTEST_ROOT ${PROJECT_SOURCE_DIR}/third_party/gtest-1.7.0)
 set(PTHREADS-W32_ROOT ${PROJECT_SOURCE_DIR}/third_party/pthreads-w32-2-9-1-release/Pre-built.2)
 
 # Set OS
@@ -70,7 +70,7 @@ add_library(mlab STATIC ${SRC_FILES})
 add_library(mlabc STATIC src/mlab.cc)
 
 # Build supplemental targets
-add_subdirectory(third_party/gtest-1.6.0)
+add_subdirectory(third_party/gtest-1.7.0)
 add_subdirectory(third_party/json-cpp)
 add_subdirectory(swig)
 add_subdirectory(test)
