@@ -125,14 +125,10 @@ class SocketTest : public SocketTestBase {
         listen_socket->AcceptOrDie());
     LOG(INFO, ">> Accepted!");
 
-    // set get recv buffer size
-    accepted_socket->SetRecvBufferSize(900000);
-    EXPECT_GE(accepted_socket->GetRecvBufferSize(), 900000U);
-
     Packet recv_str = accepted_socket->ReceiveOrDie(message.length());
     ASSERT_GT(recv_str.length(), 0U);
-    LOG(INFO, ">> Received %s", recv_str.buffer());
-    LOG(INFO, ">> Sending %s", recv_str.buffer());
+    LOG(INFO, ">> Received %s", recv_str.str().c_str());
+    LOG(INFO, ">> Sending %s", recv_str.str().c_str());
     ssize_t num_send_bytes = accepted_socket->SendOrDie(recv_str);
     ASSERT_GT(num_send_bytes, 0);
     EXPECT_EQ(recv_str.length(), static_cast<size_t>(num_send_bytes));
@@ -145,10 +141,6 @@ class SocketTest : public SocketTestBase {
     mlab::scoped_ptr<mlab::ClientSocket> client_socket(
         mlab::ClientSocket::CreateOrDie(host, port, T::type, T::family));
 
-    // set get send buffer size
-    client_socket->SetSendBufferSize(900000);
-    EXPECT_GE(client_socket->GetSendBufferSize(), 900000U);
-
     LOG(INFO, "<< Sending %s", message_str);
     EXPECT_EQ(message.length(),
               static_cast<size_t>(client_socket->SendOrDie(message)));
@@ -158,7 +150,7 @@ class SocketTest : public SocketTestBase {
     LOG(INFO, "<< Receiving %zu bytes.", bytecount);
     Packet buffer = client_socket->ReceiveOrDie(bytecount);
     LOG(INFO, "<< Received %s", buffer.buffer());
-    EXPECT_STREQ(message_str, buffer.buffer());
+    EXPECT_STREQ(message_str, buffer.str().c_str());
   }
 };
 
@@ -190,6 +182,16 @@ TYPED_TEST_CASE(SocketTest, TestParameters);
 
 TYPED_TEST(SocketTest, SendAndReceive) {
   this->SendAndReceive();
+}
+
+TEST(SocketTest, BufferSize) {
+  mlab::scoped_ptr<mlab::ListenSocket> listen_socket(
+      mlab::ListenSocket::CreateOrDie(1234, SOCKETTYPE_TCP, SOCKETFAMILY_IPV4));
+  listen_socket->SetSendBufferSize(900000U);
+  EXPECT_GE(listen_socket->GetSendBufferSize(), 900000U);
+
+  listen_socket->SetRecvBufferSize(600000U);
+  EXPECT_GE(listen_socket->GetRecvBufferSize(), 600000U);
 }
 
 }  // namespace mlab
