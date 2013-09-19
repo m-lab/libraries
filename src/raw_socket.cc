@@ -147,8 +147,7 @@ int RawSocket::Bind(const Host& host) {
 bool RawSocket::Send(const Packet& bytes, ssize_t *num_bytes) const {
   ASSERT(fd_ != -1);
 
-  // TODO(dominic): fix packet is one byte larger than real payload
-  size_t packet_len = bytes.length() - 1;
+  const size_t packet_len = bytes.length();
 
   ssize_t num = send(fd_, bytes.buffer(), packet_len, 0);
   if (num_bytes != NULL)
@@ -178,12 +177,6 @@ void RawSocket::SendToOrDie(const Host& host, const Packet& bytes,
 bool RawSocket::SendTo(const Host& host, const Packet& bytes,
                        ssize_t *num_bytes) const {
   ASSERT(fd_ != -1);
-  ssize_t num = 0;
-  size_t packet_len = 0;
-
-  // TODO(dominic): Fix packet is one byte larger than real payload
-  packet_len = bytes.length() - 1;
-
   for (Host::SocketAddressList::const_iterator addr_it = host.sockaddr_.begin();
       addr_it != host.sockaddr_.end(); ++addr_it) {
     if (addr_it->ss_family != family_) {
@@ -212,8 +205,9 @@ bool RawSocket::SendTo(const Host& host, const Packet& bytes,
       }
     }
 
-    num = sendto(fd_, bytes.buffer(), packet_len, 0,
-                 reinterpret_cast<const sockaddr*>(&(*addr_it)), addrlen);
+    const size_t packet_len = bytes.length();
+    ssize_t num = sendto(fd_, bytes.buffer(), packet_len, 0,
+                         reinterpret_cast<const sockaddr*>(&(*addr_it)), addrlen);
     *num_bytes = num;
     if (num < 0) {
       LOG(ERROR, "Failed to send to %s: %s [%d]", addr_str,
@@ -227,7 +221,7 @@ bool RawSocket::SendTo(const Host& host, const Packet& bytes,
     return true;
   }
 
-  *num_bytes = num;
+  *num_bytes = 0;
   LOG(ERROR, "no matching socketfamily address!");
   return true;
 }
