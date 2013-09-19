@@ -34,10 +34,14 @@ class Socket {
   ssize_t SendOrDie(const Packet& bytes) const;
   Packet ReceiveOrDie(size_t count);
 
-  bool SetSendBufferSize(size_t size);
-  bool SetRecvBufferSize(size_t size);
+  bool SetSendBufferSize(size_t size) const;
+  bool SetRecvBufferSize(size_t size) const;
   size_t GetSendBufferSize() const;
   size_t GetRecvBufferSize() const;
+
+  SocketType type() const {
+    return type_ == SOCKETTYPE_ICMP ? SOCKETTYPE_RAW : type_;
+  }
 
   int raw() const { return fd_; }
 
@@ -46,10 +50,6 @@ class Socket {
 
   void CreateSocket();
   void DestroySocket();
-
-  SocketType type() const {
-    return type_ == SOCKETTYPE_ICMP ? SOCKETTYPE_RAW : type_;
-  }
 
   int fd_;
   SocketFamily family_;
@@ -61,7 +61,7 @@ class Socket {
     BUFFERTYPE_RECV
   };
 
-  bool SetBufferSize(const size_t& size, BufferType type);
+  bool SetBufferSize(const size_t& size, BufferType type) const;
   size_t GetBufferSize(BufferType type) const;
 
   SocketType type_;

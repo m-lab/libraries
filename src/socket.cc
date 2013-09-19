@@ -76,11 +76,11 @@ Packet Socket::ReceiveOrDie(size_t count) {
   return packet;
 }
 
-bool Socket::SetSendBufferSize(size_t size) {
+bool Socket::SetSendBufferSize(size_t size) const {
   return SetBufferSize(size, BUFFERTYPE_SEND);
 }
 
-bool Socket::SetRecvBufferSize(size_t size) {
+bool Socket::SetRecvBufferSize(size_t size) const {
   return SetBufferSize(size, BUFFERTYPE_RECV);
 }
 
@@ -139,7 +139,7 @@ void Socket::DestroySocket() {
   fd_ = -1;
 }
 
-bool Socket::SetBufferSize(const size_t& size, BufferType type) {
+bool Socket::SetBufferSize(const size_t& size, BufferType type) const {
   ASSERT(fd_ != -1);
   ASSERT(size > 0);
   ASSERT(type == BUFFERTYPE_SEND || type == BUFFERTYPE_RECV);
