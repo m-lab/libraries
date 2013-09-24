@@ -35,28 +35,20 @@ typedef SSIZE_T ssize_t;
 
 namespace mlab {
 
-AcceptedSocket::AcceptedSocket(int listen_fd,
-                               int accepted_fd,
+AcceptedSocket::AcceptedSocket(int accepted_fd,
                                SocketType type,
                                SocketFamily family)
     : Socket(type, family),
-      listen_fd_(listen_fd),
       client_addr_len_(0) {
   fd_ = accepted_fd;
-  ASSERT(type != SOCKETTYPE_TCP || listen_fd_ != -1);
+  ASSERT(type != SOCKETTYPE_TCP || fd_ != -1);
 }
 
 AcceptedSocket::~AcceptedSocket() {
-#if defined(OS_ANDROID) || defined(OS_LINUX) || defined(OS_MACOSX) || defined(OS_FREEBSD)
-  close(listen_fd_);
-#elif defined(OS_WINDOWS)
-  closesocket(listen_fd_);
-#else
-#error Undefined platform
-#endif
-  listen_fd_ = -1;
-  // Don't destroy the listen socket.
-  fd_ = -1;
+  if (type() != SOCKETTYPE_TCP) {
+    // Don't destroy the listen socket as we share this fd.
+    fd_ = -1;
+  }
 }
 
 bool AcceptedSocket::Send(const Packet& bytes, ssize_t *num_bytes) const {

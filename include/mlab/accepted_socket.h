@@ -45,10 +45,7 @@ class AcceptedSocket : public Socket {
  private:
   friend class ListenSocket;
 
-  AcceptedSocket(int listen_fd, int accepted_fd, SocketType type,
-                 SocketFamily family);
-
-  int listen_fd_;
+  AcceptedSocket(int accepted_fd, SocketType type, SocketFamily family);
 
   // Valid for UDP sockets after first received packet.
   sockaddr_storage client_addr_;

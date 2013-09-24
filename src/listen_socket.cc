@@ -105,14 +105,16 @@ void ListenSocket::SelectWithTimeout(uint32_t timeout) {
   if (type() != SOCKETTYPE_TCP)
     return;
 
-  fd_set rfds;
-  FD_ZERO(&rfds);
-  FD_SET(fd_, &rfds);
+  fd_set active_fds;
+  FD_ZERO(&active_fds);
+  FD_SET(fd_, &active_fds);
 
   timeval timeout_val = { timeout, 0 };
   timeval* timeout_ptr = (timeout == (uint32_t) -1 ? NULL : &timeout_val);
 
-  int connected = select(fd_ + 1, &rfds, NULL, NULL, timeout_ptr);
+  fd_set read_fds = active_fds;
+  LOG(VERBOSE, "Selecting fd %d", fd_);
+  int connected = select(FD_SETSIZE, &read_fds, NULL, NULL, timeout_ptr);
   if (connected == -1) {
     LOG(FATAL, "Error when attempting to select connection: %s [%d]",
         strerror(errno), errno);
@@ -129,7 +131,7 @@ AcceptedSocket* ListenSocket::Accept() const {
   ASSERT(fd_ != -1);
 
   if (type() != SOCKETTYPE_TCP) {
-    return new AcceptedSocket(-1, fd_, type(), family_);
+    return new AcceptedSocket(fd_, type(), family_);
   }
 
   sockaddr_storage sock_storage;
@@ -142,7 +144,7 @@ AcceptedSocket* ListenSocket::Accept() const {
     return NULL;
   }
   LOG(INFO, "Accepted connection.");
-  return new AcceptedSocket(fd_, client_fd, type(), family_);
+  return new AcceptedSocket(client_fd, type(), family_);
 }
 
 AcceptedSocket* ListenSocket::AcceptOrDie() const {

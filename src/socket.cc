@@ -120,6 +120,7 @@ void Socket::CreateSocket() {
       break;
   }
   fd_ = socket(family_, type(), protocol_);
+  LOG(VERBOSE, "Created socket %d", fd_);
   if (fd_ == -1) {
     LOG(WARNING, "Failed to create socket %s [%d].",
         strerror(errno), errno);
@@ -135,6 +136,7 @@ void Socket::DestroySocket() {
 #else
 #error Undefined platform
 #endif
+    LOG(VERBOSE, "Destroyed socket %d", fd_);
   }
   fd_ = -1;
 }
