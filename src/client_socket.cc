@@ -260,10 +260,12 @@ bool ClientSocket::Connect(const Host& host, uint16_t port) {
 
     // Connect to the first available.
     if (connect(fd_, reinterpret_cast<const sockaddr*>(saddr), addrlen) == 0) {
+      LOG(INFO, "Connected to %s on port %d", host.original_hostname.c_str(),
+          port);
       return true;
     }
 
-    LOG(ERROR, "Failed to connect to %s on port %d: %s [%d]",
+    LOG(WARNING, "Failed to connect to %s on port %d: %s [%d]",
         host.original_hostname.c_str(), port, strerror(errno), errno);
   }
 
