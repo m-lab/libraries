@@ -35,10 +35,12 @@ class Packet {
     data_.assign(buffer, buffer + length);
   }
 
-  std::string str() const { return std::string(buffer(), 0, length()); }
+  std::string str() const {
+    return length() == 0 ? std::string() : std::string(buffer(), 0, length());
+  }
 
   const char* buffer() const {
-    return reinterpret_cast<const char*>(&data_[0]);
+    return length() == 0 ? NULL : reinterpret_cast<const char*>(&data_[0]);
   }
   const size_t length() const { return data_.size(); }
 
