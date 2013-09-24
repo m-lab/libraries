@@ -47,7 +47,7 @@ class Packet {
   const std::vector<uint8_t>& data() const { return data_; }
 
   template<typename T> T as() const {
-    return *(reinterpret_cast<const T*>(&data_[0]));
+    return length() == 0 ? T() : *(reinterpret_cast<const T*>(&data_[0]));
   }
  private:
   std::vector<uint8_t> data_;
