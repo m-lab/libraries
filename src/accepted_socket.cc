@@ -55,6 +55,8 @@ AcceptedSocket::~AcceptedSocket() {
 #error Undefined platform
 #endif
   listen_fd_ = -1;
+  // Don't destroy the listen socket.
+  fd_ = -1;
 }
 
 bool AcceptedSocket::Send(const Packet& bytes, ssize_t *num_bytes) const {
