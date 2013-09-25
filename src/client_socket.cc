@@ -41,7 +41,6 @@ typedef SSIZE_T ssize_t;
 #include "mlab/host.h"
 
 namespace mlab {
-
 // static
 ClientSocket* ClientSocket::Create(const Host& hostname, uint16_t port) {
   return Create(hostname, port, SOCKETTYPE_TCP, SOCKETFAMILY_IPV4);
@@ -259,7 +258,11 @@ bool ClientSocket::Connect(const Host& host, uint16_t port) {
         AF_INET, AF_INET6, type(), SOCK_STREAM, SOCK_DGRAM);
 
     // Connect to the first available.
-    if (connect(fd_, reinterpret_cast<const sockaddr*>(saddr), addrlen) == 0) {
+    int connected;
+    while ((connected = connect(fd_, reinterpret_cast<const sockaddr*>(saddr),
+                                addrlen)) == -1 &&
+           errno == EINTR) { }
+    if (connected == 0) {
       LOG(INFO, "Connected to %s on port %d", host.original_hostname.c_str(),
           port);
       return true;
@@ -276,7 +279,9 @@ bool ClientSocket::Connect(const Host& host, uint16_t port) {
 bool ClientSocket::Send(const Packet& bytes, ssize_t *num_bytes) const {
   ASSERT(fd_ != -1);
 
-  ssize_t num = send(fd_, bytes.buffer(), bytes.length(), 0);
+  ssize_t num;
+  while ((num = send(fd_, bytes.buffer(), bytes.length(), 0)) == -1 &&
+         errno == EINTR) { }
   if (num_bytes != NULL)
     *num_bytes = num;
 
@@ -300,7 +305,8 @@ Packet ClientSocket::Receive(size_t count, ssize_t *num_bytes) {
   LOG(VERBOSE, "Receiving %zu bytes.", count);
 
   char buffer[count];
-  ssize_t num = recv(fd_, buffer, count, 0);
+  ssize_t num;
+  while ((num = recv(fd_, buffer, count, 0)) == -1 && errno == EINTR) { }
   if (num_bytes != NULL)
     *num_bytes = num;
 
@@ -328,13 +334,15 @@ Packet ClientSocket::ReceiveX(size_t count, ssize_t *num_bytes) {
   char buffer[count];
   size_t offset = 0;
   size_t recv_count = 0;
-  
+
   while (offset < count) {
-    ssize_t num = recv(fd_, &buffer[offset], count - offset, 0);
+    ssize_t num;
+    while ((num = recv(fd_, &buffer[offset], count - offset, 0)) == -1 &&
+           errno == EINTR) { }
 
     if (num < 0) {
       if (num_bytes != NULL)
-	*num_bytes = offset;
+        *num_bytes = offset;
       LOG(VERBOSE, "Failed to recv: %s [%d]", strerror(errno), errno);
       return Packet(buffer, recv_count);
     }
@@ -359,6 +367,4 @@ ClientSocket::ClientSocket(SocketType type, SocketFamily family)
     : Socket(type, family) {
   CreateSocket();
 }
-
-
 }  // namespace mlab

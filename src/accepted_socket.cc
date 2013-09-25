@@ -34,7 +34,6 @@ typedef SSIZE_T ssize_t;
 #include "log.h"
 
 namespace mlab {
-
 AcceptedSocket::AcceptedSocket(int accepted_fd,
                                SocketType type,
                                SocketFamily family)
@@ -58,14 +57,15 @@ bool AcceptedSocket::Send(const Packet& bytes, ssize_t *num_bytes) const {
   switch (type()) {
     case SOCK_STREAM:
       ASSERT(client_addr_len_ == 0);
-      num = send(fd_, bytes.buffer(), bytes.length(), 0);
+      while ((num = send(fd_, bytes.buffer(), bytes.length(), 0)) == -1 &&
+              errno == EINTR) { }
       break;
 
     case SOCK_DGRAM:
       ASSERT(client_addr_len_ != 0);
-      num = sendto(fd_, bytes.buffer(), bytes.length(), 0,
-                   reinterpret_cast<const sockaddr*>(&client_addr_),
-                   client_addr_len_);
+      while ((num = sendto(fd_, bytes.buffer(), bytes.length(), 0,
+                           reinterpret_cast<const sockaddr*>(&client_addr_),
+                           client_addr_len_)) == -1 && errno == EINTR) { }
       break;
 
     default:
@@ -98,14 +98,14 @@ Packet AcceptedSocket::Receive(size_t count, ssize_t *num_bytes) {
   ssize_t num = -1;
   switch (type()) {
     case SOCK_STREAM:
-      num = recv(fd_, &buffer[0], count, 0);
+      while ((num = recv(fd_, &buffer[0], count, 0)) == -1 && errno == EINTR) { }
       break;
 
     case SOCK_DGRAM:
       client_addr_len_ = sizeof(sockaddr_storage);
-      num = recvfrom(fd_, &buffer[0], count, 0,
-                     reinterpret_cast<sockaddr*>(&client_addr_),
-                     &client_addr_len_);
+      while ((num = recvfrom(fd_, &buffer[0], count, 0,
+                             reinterpret_cast<sockaddr*>(&client_addr_),
+                             &client_addr_len_)) == -1 && errno == EINTR) { }
       break;
 
     default:
@@ -128,5 +128,4 @@ Packet AcceptedSocket::Receive(size_t count, ssize_t *num_bytes) {
   LOG(VERBOSE, "Received %s.", buffer);
   return Packet(buffer, num);
 }
-
 }  // namespace mlab

@@ -41,7 +41,7 @@ typedef SSIZE_T ssize_t;
 namespace mlab {
 namespace {
 const timeval kDefaultTimeout = {5, 0};
-}
+}  // namespace
 
 // static
 ListenSocket* ListenSocket::Create(uint16_t port) {
@@ -137,7 +137,8 @@ AcceptedSocket* ListenSocket::Accept() const {
   sockaddr_storage sock_storage;
   sockaddr* saddr = reinterpret_cast<sockaddr*>(&sock_storage);
   socklen_t saddrlen = sizeof(sock_storage);
-  int client_fd = accept(fd_, saddr, &saddrlen);
+  int client_fd;
+  while ((client_fd = accept(fd_, saddr, &saddrlen)) == -1 && errno == EINTR) { }
   if (client_fd == -1) {
     LOG(ERROR, "Failed to accept connection: %s [%d]",
         strerror(errno), errno);
@@ -154,12 +155,12 @@ AcceptedSocket* ListenSocket::AcceptOrDie() const {
 }
 
 bool ListenSocket::Send(const Packet&, ssize_t*) const {
-  ASSERT(false);
+  LOG(FATAL, "It's an error to send on a ListenSocket.");
   return false;
 }
 
 Packet ListenSocket::Receive(size_t, ssize_t*) {
-  ASSERT(false);
+  LOG(FATAL, "It's an error to receive on a ListenSocket.");
   return Packet(std::string());
 }
 
@@ -240,5 +241,4 @@ void ListenSocket::Start(uint16_t port) {
   if (fd_ == -1)
     LOG(FATAL, "Failed to find address to bind to and listen on.");
 }
-
 }  // namespace mlab
