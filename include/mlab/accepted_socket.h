@@ -40,7 +40,7 @@ class AcceptedSocket : public Socket {
 
   // Attempts to receive |count| bytes from connected clients. Returns the
   // received packet and sets |num_bytes| to the actual bytes received.
-  virtual Packet Receive(size_t count, ssize_t *num_bytes);
+  virtual Packet Receive(size_t count, ssize_t *num_bytes) const;
 
  private:
   friend class ListenSocket;
@@ -48,8 +48,9 @@ class AcceptedSocket : public Socket {
   AcceptedSocket(int accepted_fd, SocketType type, SocketFamily family);
 
   // Valid for UDP sockets after first received packet.
-  sockaddr_storage client_addr_;
-  socklen_t client_addr_len_;
+  // mutable as they're written to from the otherwise const Receive methods.
+  mutable sockaddr_storage client_addr_;
+  mutable socklen_t client_addr_len_;
 };
 
 }  // namespace mlab

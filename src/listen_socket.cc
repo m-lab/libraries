@@ -159,7 +159,7 @@ bool ListenSocket::Send(const Packet&, ssize_t*) const {
   return false;
 }
 
-Packet ListenSocket::Receive(size_t, ssize_t*) {
+Packet ListenSocket::Receive(size_t, ssize_t*) const {
   LOG(FATAL, "It's an error to receive on a ListenSocket.");
   return Packet(std::string());
 }

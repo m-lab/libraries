@@ -87,7 +87,7 @@ bool AcceptedSocket::Send(const Packet& bytes, ssize_t *num_bytes) const {
   return true;
 }
 
-Packet AcceptedSocket::Receive(size_t count, ssize_t *num_bytes) {
+Packet AcceptedSocket::Receive(size_t count, ssize_t *num_bytes) const {
   ASSERT(fd_ != -1);
   ASSERT(count > 0);
 
@@ -98,14 +98,20 @@ Packet AcceptedSocket::Receive(size_t count, ssize_t *num_bytes) {
   ssize_t num = -1;
   switch (type()) {
     case SOCK_STREAM:
-      while ((num = recv(fd_, &buffer[0], count, 0)) == -1 && errno == EINTR) { }
+      while ((num = recv(fd_, &buffer[0], count, 0)) == -1 && errno == EINTR) {
+      }
       break;
 
     case SOCK_DGRAM:
       client_addr_len_ = sizeof(sockaddr_storage);
-      while ((num = recvfrom(fd_, &buffer[0], count, 0,
+      while ((num = recvfrom(fd_,
+                             &buffer[0],
+                             count,
+                             0,
                              reinterpret_cast<sockaddr*>(&client_addr_),
-                             &client_addr_len_)) == -1 && errno == EINTR) { }
+                             &client_addr_len_)) == -1 &&
+             errno == EINTR) {
+      }
       break;
 
     default:

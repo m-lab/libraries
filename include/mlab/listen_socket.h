@@ -65,7 +65,7 @@ class ListenSocket : public Socket {
   AcceptedSocket* AcceptOrDie() const;
 
   virtual bool Send(const Packet&, ssize_t*) const;
-  virtual Packet Receive(size_t, ssize_t*);
+  virtual Packet Receive(size_t, ssize_t*) const;
 
  private:
   ListenSocket(uint16_t port, SocketType type, SocketFamily family);

@@ -46,7 +46,7 @@ class ClientSocket : public Socket {
   static ClientSocket* CreateOrDie(const Host& hostname, uint16_t port,
                                    SocketType type, SocketFamily family);
   static ClientSocket* CreateOrDie(const Host& bindhost, uint16_t bindport,
-                                   const Host& connecthost, 
+                                   const Host& connecthost,
                                    uint16_t connectport,
                                    SocketType type, SocketFamily family);
 
@@ -58,11 +58,11 @@ class ClientSocket : public Socket {
 
   // Attempts to receive |count| bytes from connected clients. Returns the
   // received packet. |num_bytes| is the number of bytes actually received.
-  virtual Packet Receive(size_t count, ssize_t *num_bytes);
+  virtual Packet Receive(size_t count, ssize_t *num_bytes) const;
 
   // Attempts to accumulate |count| bytes from connected clients. Returns the
   // received packet. |num_bytes| is the number of bytes actually received.
-  virtual Packet ReceiveX(size_t count, ssize_t *num_bytes);
+  virtual Packet ReceiveX(size_t count, ssize_t *num_bytes) const;
 
  private:
   ClientSocket(SocketType type, SocketFamily family);

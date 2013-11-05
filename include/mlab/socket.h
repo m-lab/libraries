@@ -29,10 +29,10 @@ class Socket {
   virtual ~Socket();
 
   virtual bool Send(const Packet& bytes, ssize_t* num_bytes) const = 0;
-  virtual Packet Receive(size_t count, ssize_t* num_bytes) = 0;
+  virtual Packet Receive(size_t count, ssize_t* num_bytes) const = 0;
 
   ssize_t SendOrDie(const Packet& bytes) const;
-  Packet ReceiveOrDie(size_t count);
+  Packet ReceiveOrDie(size_t count) const;
 
   bool SetSendBufferSize(size_t size) const;
   bool SetRecvBufferSize(size_t size) const;

@@ -39,9 +39,11 @@ class RawSocket : public Socket {
   virtual bool SendTo(const Host& host, const Packet& bytes,
                       ssize_t *num_bytes) const;
 
-  virtual Packet Receive(size_t count, ssize_t *num_bytes);
-  virtual Packet ReceiveFromOrDie(size_t count, Host* host);
-  virtual Packet ReceiveFrom(size_t count, Host* host, ssize_t *num_bytes);
+  virtual Packet Receive(size_t count, ssize_t *num_bytes) const;
+  virtual Packet ReceiveFromOrDie(size_t count, Host* host) const;
+  virtual Packet ReceiveFrom(size_t count,
+                             Host* host,
+                             ssize_t* num_bytes) const;
 
   bool SetIPHDRINCL();  // only effective for IPv4, however won't fail on v6.
 

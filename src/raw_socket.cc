@@ -226,7 +226,7 @@ bool RawSocket::SendTo(const Host& host, const Packet& bytes,
   return true;
 }
 
-Packet RawSocket::Receive(size_t count, ssize_t *num_bytes) {
+Packet RawSocket::Receive(size_t count, ssize_t *num_bytes) const {
   ASSERT(fd_ != -1);
   ASSERT(count > 0);
 
@@ -253,7 +253,7 @@ Packet RawSocket::Receive(size_t count, ssize_t *num_bytes) {
   return Packet(buffer, num);
 }
 
-Packet RawSocket::ReceiveFromOrDie(size_t count, Host* host) {
+Packet RawSocket::ReceiveFromOrDie(size_t count, Host* host) const {
   ASSERT(fd_ != -1);
   ASSERT(count > 0);
 
@@ -264,7 +264,9 @@ Packet RawSocket::ReceiveFromOrDie(size_t count, Host* host) {
   return packet;
 }
 
-Packet RawSocket::ReceiveFrom(size_t count, Host* host, ssize_t *num_bytes) {
+Packet RawSocket::ReceiveFrom(size_t count,
+                              Host* host,
+                              ssize_t* num_bytes) const {
   ASSERT(fd_ != -1);
   ASSERT(count > 0);
 

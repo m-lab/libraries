@@ -65,7 +65,7 @@ ssize_t Socket::SendOrDie(const Packet& bytes) const {
   return num_bytes;
 }
 
-Packet Socket::ReceiveOrDie(size_t count) {
+Packet Socket::ReceiveOrDie(size_t count) const {
   ASSERT(fd_ != -1);
   ASSERT(count > 0);
 

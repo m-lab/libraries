@@ -298,7 +298,7 @@ bool ClientSocket::Send(const Packet& bytes, ssize_t *num_bytes) const {
   return true;
 }
 
-Packet ClientSocket::Receive(size_t count, ssize_t *num_bytes) {
+Packet ClientSocket::Receive(size_t count, ssize_t *num_bytes) const {
   ASSERT(fd_ != -1);
   ASSERT(count > 0);
 
@@ -325,7 +325,7 @@ Packet ClientSocket::Receive(size_t count, ssize_t *num_bytes) {
   return Packet(buffer, num);
 }
 
-Packet ClientSocket::ReceiveX(size_t count, ssize_t *num_bytes) {
+Packet ClientSocket::ReceiveX(size_t count, ssize_t *num_bytes) const {
   ASSERT(fd_ != -1);
   ASSERT(count > 0);
 
