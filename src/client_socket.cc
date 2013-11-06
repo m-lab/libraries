@@ -333,7 +333,6 @@ Packet ClientSocket::ReceiveX(size_t count, ssize_t *num_bytes) const {
 
   char buffer[count];
   size_t offset = 0;
-  size_t recv_count = 0;
 
   while (offset < count) {
     ssize_t num;
@@ -344,7 +343,7 @@ Packet ClientSocket::ReceiveX(size_t count, ssize_t *num_bytes) const {
       if (num_bytes != NULL)
         *num_bytes = offset;
       LOG(VERBOSE, "Failed to recv: %s [%d]", strerror(errno), errno);
-      return Packet(buffer, recv_count);
+      return Packet(buffer, offset);
     }
 
     if (num == 0)
@@ -352,6 +351,8 @@ Packet ClientSocket::ReceiveX(size_t count, ssize_t *num_bytes) const {
 
     offset += num;
   }
+  if (num_bytes != NULL)
+    *num_bytes = offset;
 
   if (offset == 0) {
     LOG(WARNING, "Failed to recv: No bytes available.");

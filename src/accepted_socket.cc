@@ -53,6 +53,8 @@ AcceptedSocket::~AcceptedSocket() {
 bool AcceptedSocket::Send(const Packet& bytes, ssize_t *num_bytes) const {
   ASSERT(fd_ != -1);
 
+  LOG(VERBOSE, "Sending %zu bytes\n", bytes.length());
+
   ssize_t num = -1;
   switch (type()) {
     case SOCK_STREAM:
