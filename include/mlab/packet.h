@@ -27,6 +27,8 @@ class Packet {
  public:
   explicit Packet(const std::vector<uint8_t>& data);
   explicit Packet(const std::string& data);
+
+  // TODO(dominic): Maybe this can take a const T* instead?
   Packet(const char* buffer, size_t length);
 
   template<typename T> Packet(const T& data) {

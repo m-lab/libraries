@@ -62,6 +62,7 @@ class ClientSocket : public Socket {
 
   // Attempts to accumulate |count| bytes from connected clients. Returns the
   // received packet. |num_bytes| is the number of bytes actually received.
+  //TODO(dominic): Move this to socket (or at least accepted socket) and rename.
   virtual Packet ReceiveX(size_t count, ssize_t *num_bytes) const;
 
  private:
